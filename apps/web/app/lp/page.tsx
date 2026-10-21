@@ -53,6 +53,11 @@ function formatShareValue(value: bigint | undefined): string {
 export default function LPDashboard() {
   const connected = useWalletStore((s) => s.connected);
   const address = useWalletStore((s) => s.address);
+  const network = useWalletStore((s) => s.network);
+  const friendbotUrl =
+    network?.trim().toLowerCase() === "testnet" && address
+      ? `https://friendbot.stellar.org/?addr=${encodeURIComponent(address)}`
+      : null;
   const {
     deposit,
     withdraw,
@@ -293,7 +298,28 @@ export default function LPDashboard() {
             <aside className="rounded border border-amber-500/20 bg-amber-500/5 p-3 text-xs text-amber-200/80">
               <p className="font-semibold text-amber-200">Before depositing on Testnet</p>
               <p className="mt-1">
-                Switch your wallet to Stellar Testnet, add a trustline for the configured USDC asset, and keep test XLM for transaction fees and the account reserve. You can get test XLM from the Stellar Testnet Friendbot.
+                Keep test XLM in your account for Soroban transaction fees and
+                the account reserve. Use the Testnet Friendbot to fund this
+                wallet with test XLM.
+              </p>
+              {friendbotUrl ? (
+                <a
+                  href={friendbotUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex min-h-10 items-center rounded-md border border-amber-300/40 px-3 font-semibold text-amber-100 underline underline-offset-4 hover:bg-amber-300/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+                >
+                  Fund this wallet with Testnet XLM
+                </a>
+              ) : (
+                <p className="mt-3">
+                  Connect Freighter on Testnet to get a Friendbot link for your
+                  public account address.
+                </p>
+              )}
+              <p className="mt-3 font-semibold text-amber-100">
+                Friendbot only needs your public account address. Never share or
+                enter your secret key or recovery phrase.
               </p>
             </aside>
             <label
